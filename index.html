@@ -3,7 +3,9 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <meta name="description" content="Vidhi Vazirani — Data Scientist & ML Engineer building production AI systems at the intersection of cybersecurity and machine learning. MS CS Northwestern, h-index 4, 36+ citations."/>
   <title>Vidhi Vazirani</title>
+  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='4' fill='%230d0f14'/%3E%3Ctext x='50%25' y='54%25' dominant-baseline='middle' text-anchor='middle' font-family='Georgia,serif' font-size='14' fill='%236ee7b7'%3Evv%3C/text%3E%3C/svg%3E"/>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Mono:wght@300;400;500&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
@@ -216,6 +218,11 @@
 
     #about p + p { margin-top: 1.2rem; }
 
+    .about-actions {
+      margin-top: 2rem;
+      display: flex; gap: 1rem; flex-wrap: wrap;
+    }
+
     /* ── EXPERIENCE ── */
     .exp-item {
       display: grid;
@@ -249,10 +256,26 @@
       margin-bottom: 0.8rem;
     }
 
-    .exp-desc {
+    .exp-bullets {
+      list-style: none;
+      padding: 0;
+      margin: 0;
+    }
+
+    .exp-bullets li {
       font-size: 0.9rem;
       color: var(--muted);
       line-height: 1.7;
+      padding-left: 1.1rem;
+      position: relative;
+      margin-bottom: 0.3rem;
+    }
+
+    .exp-bullets li::before {
+      content: '–';
+      position: absolute;
+      left: 0;
+      color: var(--accent);
     }
 
     /* ── EDUCATION ── */
@@ -347,6 +370,14 @@
       margin-bottom: 0.25rem;
     }
 
+    .pub-summary {
+      font-size: 0.85rem;
+      color: #64748b;
+      margin-bottom: 0.3rem;
+      line-height: 1.65;
+      max-width: 580px;
+    }
+
     .pub-venue {
       font-family: var(--mono);
       font-size: 11px;
@@ -371,21 +402,6 @@
       border: 1px solid rgba(110,231,183,0.2);
       padding: 0.15rem 0.5rem;
       border-radius: 3px;
-    }
-
-    /* ── PROJECTS ── */
-    .projects-placeholder {
-      border: 1px dashed var(--border2);
-      border-radius: 8px;
-      padding: 3rem 2rem;
-      text-align: center;
-      color: var(--muted);
-    }
-
-    .projects-placeholder p {
-      font-family: var(--mono);
-      font-size: 12px;
-      letter-spacing: 0.06em;
     }
 
     /* ── BLOG ── */
@@ -538,12 +554,11 @@
 
   <!-- NAV -->
   <nav>
-    <a class="nav-logo" href="#hero">vv_</a>
+    <a class="nav-logo" href="#hero">{ vv }</a>
     <ul class="nav-links">
       <li><a href="#about">About</a></li>
       <li><a href="#experience">Work</a></li>
       <li><a href="#publications">Papers</a></li>
-      <li><a href="#projects">Projects</a></li>
       <li><a href="blog.html">Blog</a></li>
       <li><a href="#contact">Contact</a></li>
     </ul>
@@ -557,7 +572,7 @@
       <h1>Data Scientist<br><em style="font-style:italic; color:#64748b;">& ML Engineer</em></h1>
       <p class="hero-sub">
         Building production ML systems at the intersection of <em>cybersecurity</em> and <em>AI</em>.
-        Based in San Jose, CA — formerly Northwestern MS CS · h-index 4 · 36+ citations.
+        Based in SF Bay Area, CA — formerly Northwestern MS CS · h-index 4 · 36+ citations.
       </p>
       <div class="hero-cta">
         <a class="btn btn-primary" href="#experience">View Work</a>
@@ -598,6 +613,9 @@
       <p>
         Outside work, I write about AI and ML on my tech journal, and I'm endlessly curious about the systems being built at the frontier.
       </p>
+      <div class="about-actions">
+        <a class="btn btn-primary" href="VidhiVazirani_MasterCV.pdf" target="_blank" download>Download CV</a>
+      </div>
     </section>
 
     <!-- EXPERIENCE -->
@@ -611,9 +629,13 @@
         <div>
           <div class="exp-role">Data Scientist</div>
           <div class="exp-company">Infoblox · Santa Clara, CA</div>
-          <div class="exp-desc">
-            Working across five major workstreams: (1) DNS/DHCP anomaly detection pipeline on 15.5M records — two-stage z-score + XGBoost system cutting FP rate by 20%+; (2) LLM fine-tuning for lookalike domain detection — Llama 3.2 3B reaching 84.8% accuracy; (3) agentic on-call triage system for Threat Defense alerts; (4) Spark Structured Streaming + Kafka security log analytics; (5) BloxMate internal AI assistant infrastructure and MLflow evaluation framework.
-          </div>
+          <ul class="exp-bullets">
+            <li>DNS/DHCP anomaly detection pipeline on 15.5M records — two-stage z-score + XGBoost system cutting FP rate by 20%+</li>
+            <li>LLM fine-tuning for lookalike domain detection — Llama 3.2 3B reaching 84.8% accuracy</li>
+            <li>Agentic on-call triage system for Threat Defense alerts</li>
+            <li>Spark Structured Streaming + Kafka security log analytics</li>
+            <li>BloxMate internal AI assistant infrastructure and MLflow evaluation framework</li>
+          </ul>
         </div>
       </div>
 
@@ -622,9 +644,10 @@
         <div>
           <div class="exp-role">AI Intern</div>
           <div class="exp-company">Infoblox · Remote</div>
-          <div class="exp-desc">
-            Fine-tuned LLMs (Llama, Gemma, Mistral) on GPT-4o-generated QnA datasets for domain-specific classification. Built automated data reporting pipelines with SQL and real-time Grafana dashboards.
-          </div>
+          <ul class="exp-bullets">
+            <li>Fine-tuned LLMs (Llama, Gemma, Mistral) on GPT-4o-generated QnA datasets for domain-specific classification</li>
+            <li>Built automated data reporting pipelines with SQL and real-time Grafana dashboards</li>
+          </ul>
         </div>
       </div>
 
@@ -633,9 +656,11 @@
         <div>
           <div class="exp-role">Teaching Intern</div>
           <div class="exp-company">Coding Jr. · Remote</div>
-          <div class="exp-desc">
-            Led Python and Data Science instructional sessions for 50+ students. Produced 75+ video lectures across Python and C++; achieved 95% positive feedback rating across 10+ schools.
-          </div>
+          <ul class="exp-bullets">
+            <li>Led Python and Data Science instructional sessions for 50+ students</li>
+            <li>Produced 75+ video lectures across Python and C++</li>
+            <li>Achieved 95% positive feedback rating across 10+ schools</li>
+          </ul>
         </div>
       </div>
 
@@ -644,9 +669,11 @@
         <div>
           <div class="exp-role">Co-Founder & Head of Technology</div>
           <div class="exp-company">Being Ambitious · Mumbai, India</div>
-          <div class="exp-desc">
-            Co-founded a content and media platform; led a team of 7. Interviewed 25+ founders and influencers. Built and optimized the website (HTML/CSS/JS/PHP) — drove a 30% increase in web traffic.
-          </div>
+          <ul class="exp-bullets">
+            <li>Co-founded a content and media platform; led a team of 7</li>
+            <li>Interviewed 25+ founders and influencers</li>
+            <li>Built and optimized the website (HTML/CSS/JS/PHP) — drove a 30% increase in web traffic</li>
+          </ul>
         </div>
       </div>
 
@@ -655,9 +682,9 @@
         <div>
           <div class="exp-role">Brand Strategy & Social Media Marketing Intern</div>
           <div class="exp-company">Jio Creative Labs · Mumbai, India</div>
-          <div class="exp-desc">
-            Developed brand strategy and executed social media campaigns for a leading Indian media and telecom conglomerate.
-          </div>
+          <ul class="exp-bullets">
+            <li>Developed brand strategy and executed social media campaigns for a leading Indian media and telecom conglomerate</li>
+          </ul>
         </div>
       </div>
 
@@ -760,11 +787,12 @@
       <div class="pub-item">
         <div>
           <div class="pub-title">
-            <a href="https://scholar.google.com/citations?hl=en&user=m7yrJE4AAAAJ" target="_blank">
+            <a href="#" target="_blank">
               Deep Hybrid Approach with Sequential Feature Extraction and Classification for Robust Malware Detection
             </a>
           </div>
           <div class="pub-authors">S. Singh, D. Krishnan, V. Vazirani, V. Ravi, SA. Alsuhibany</div>
+          <div class="pub-summary">Proposes a hybrid deep learning model that chains sequential feature extraction with a classification head to detect malware with high accuracy while significantly reducing false positive rates.</div>
           <div class="pub-venue">Egyptian Informatics Journal, Vol. 27, 100539 · Elsevier</div>
           <span class="pub-cited">Cited by 21</span>
         </div>
@@ -774,11 +802,12 @@
       <div class="pub-item">
         <div>
           <div class="pub-title">
-            <a href="https://scholar.google.com/citations?hl=en&user=m7yrJE4AAAAJ" target="_blank">
+            <a href="#" target="_blank">
               Beyond Boundaries: Unifying Classification and Segmentation in Wildfire Detection Systems
             </a>
           </div>
           <div class="pub-authors">S. Singh, V. Vazirani, S. Singhania, VS. Suroth, V. Soni, A. Biwalkar et al.</div>
+          <div class="pub-summary">Introduces a unified computer vision framework that jointly performs image classification and semantic segmentation for wildfire detection, improving detection coverage and spatial precision.</div>
           <div class="pub-venue">Multimedia Tools and Applications, Vol. 84 (20), pp. 22441–22473 · Springer</div>
           <span class="pub-cited">Cited by 5</span>
         </div>
@@ -788,11 +817,12 @@
       <div class="pub-item">
         <div>
           <div class="pub-title">
-            <a href="https://scholar.google.com/citations?hl=en&user=m7yrJE4AAAAJ" target="_blank">
+            <a href="#" target="_blank">
               Classification vs Clustering: Ways for Diabetes Detection
             </a>
           </div>
           <div class="pub-authors">S. Singh, V. Vazirani</div>
+          <div class="pub-summary">Benchmarks supervised classification algorithms against unsupervised clustering approaches for diabetes detection, identifying the most effective methods across standard clinical datasets.</div>
           <div class="pub-venue">IEEE 7th Int'l Conference for Convergence in Technology (I2CT), pp. 1–8</div>
           <span class="pub-cited">Cited by 5</span>
         </div>
@@ -802,11 +832,12 @@
       <div class="pub-item">
         <div>
           <div class="pub-title">
-            <a href="https://scholar.google.com/citations?hl=en&user=m7yrJE4AAAAJ" target="_blank">
+            <a href="#" target="_blank">
               Clinical Decision Support Systems and Computational Intelligence for Healthcare Industries
             </a>
           </div>
           <div class="pub-authors">S. Singh, A. Biwalkar, V. Vazirani</div>
+          <div class="pub-summary">Reviews the role of computational intelligence — including expert systems, ML, and knowledge modelling — in enabling real-time clinical decision support across healthcare settings.</div>
           <div class="pub-venue">Knowledge Modelling and Big Data Analytics in Healthcare, pp. 37–63 · Taylor & Francis</div>
           <span class="pub-cited">Cited by 5</span>
         </div>
@@ -816,11 +847,12 @@
       <div class="pub-item">
         <div>
           <div class="pub-title">
-            <a href="https://scholar.google.com/citations?hl=en&user=m7yrJE4AAAAJ" target="_blank">
+            <a href="#" target="_blank">
               Review of Medical Imaging with Machine Learning and Deep Learning-based Approaches for COVID-19
             </a>
           </div>
           <div class="pub-authors">S. Singh, V. Vazirani, D. Krishnan</div>
+          <div class="pub-summary">Surveys ML and deep learning techniques applied to chest X-ray and CT scan analysis for COVID-19 diagnosis, severity assessment, and prognosis.</div>
           <div class="pub-venue">Smart Health Technologies for the COVID-19 Pandemic · IET</div>
         </div>
         <div class="pub-year">2022</div>
@@ -829,11 +861,12 @@
       <div class="pub-item">
         <div>
           <div class="pub-title">
-            <a href="https://scholar.google.com/citations?hl=en&user=m7yrJE4AAAAJ" target="_blank">
+            <a href="#" target="_blank">
               Clinical Decision Support Systems and Computational Intelligence for Healthcare Industries (Volume 2)
             </a>
           </div>
           <div class="pub-authors">S. Singh, A. Biwalkar, V. Vazirani</div>
+          <div class="pub-summary">Second volume extending frameworks for knowledge modelling and big data analytics in clinical settings, covering advances in AI-driven patient care and predictive diagnostics.</div>
           <div class="pub-venue">Knowledge Modelling and Big Data Analytics in Healthcare: Advances · Taylor & Francis</div>
         </div>
         <div class="pub-year">2021</div>
@@ -844,19 +877,9 @@
       </div>
     </section>
 
-    <!-- PROJECTS -->
-    <section id="projects" class="fade-in">
-      <p class="section-label">// 05 · Projects</p>
-      <div class="divider"></div>
-      <h2>Projects</h2>
-      <div class="projects-placeholder">
-        <p>// Coming soon — check back later</p>
-      </div>
-    </section>
-
     <!-- BLOG -->
     <section id="blog" class="fade-in">
-      <p class="section-label">// 06 · Writing</p>
+      <p class="section-label">// 05 · Writing</p>
       <div class="divider"></div>
       <h2>Blog</h2>
       <div id="blog-list">
@@ -869,28 +892,24 @@
 
     <!-- CONTACT -->
     <section id="contact" class="fade-in">
-      <p class="section-label">// 07 · Contact</p>
+      <p class="section-label">// 06 · Contact</p>
       <div class="divider"></div>
       <h2>Get in touch</h2>
       <p style="color:var(--muted); max-width:520px; margin-bottom:0.5rem;">
         Open to research collaborations, speaking opportunities, and interesting conversations about ML and AI systems.
       </p>
       <div class="contact-grid">
-        <a class="contact-item" href="mailto:vidhivazirani2024@u.northwestern.edu">
+        <a class="contact-item" href="mailto:vidhivazirani1203@gmail.com">
           <div class="contact-type">Email</div>
-          <div class="contact-val">vidhivazirani2024@u.northwestern.edu</div>
+          <div class="contact-val">vidhivazirani1203@gmail.com</div>
         </a>
         <a class="contact-item" href="https://www.linkedin.com/in/vidhi-vazirani" target="_blank">
           <div class="contact-type">LinkedIn</div>
-          <div class="contact-val">linkedin.com/in/vidhivazirani</div>
+          <div class="contact-val">linkedin.com/in/vidhi-vazirani</div>
         </a>
-        <a class="contact-item" href="https://scholar.google.com/citations?hl=en&user=m7yrJE4AAAAJ" target="_blank">
-          <div class="contact-type">Google Scholar</div>
-          <div class="contact-val">Vidhi Vazirani</div>
-        </a>
-        <a class="contact-item" href="https://vidhivazirani1203-tdurc.wordpress.com" target="_blank">
-          <div class="contact-type">Blog</div>
-          <div class="contact-val">My tech journal</div>
+        <a class="contact-item" href="https://github.com/vidhi1203" target="_blank">
+          <div class="contact-type">GitHub</div>
+          <div class="contact-val">github.com/vidhi1203</div>
         </a>
       </div>
     </section>
@@ -901,8 +920,7 @@
     <span class="footer-copy">© 2026 Vidhi Vazirani</span>
     <div class="footer-links">
       <a href="https://www.linkedin.com/in/vidhi-vazirani" target="_blank">LinkedIn</a>
-      <a href="https://scholar.google.com/citations?hl=en&user=m7yrJE4AAAAJ" target="_blank">Scholar</a>
-      <a href="https://vidhivazirani1203-tdurc.wordpress.com" target="_blank">Blog</a>
+      <a href="https://github.com/vidhi1203" target="_blank">GitHub</a>
     </div>
   </footer>
 
