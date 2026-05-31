@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Robust Z-Score · Vidhi Vazirani</title>
+  <link rel="stylesheet" href="post.css"/>
+</head>
+<body>
+<nav>
+  <a class="nav-logo" href="../index.html">vv_</a>
+  <ul class="nav-links">
+    <li><a href="../index.html#about">About</a></li>
+    <li><a href="../index.html#experience">Work</a></li>
+    <li><a href="../index.html#publications">Papers</a></li>
+    <li><a href="../blog.html">Blog</a></li>
+    <li><a href="../index.html#contact">Contact</a></li>
+  </ul>
+</nav>
+
+<article>
+  <a class="back-link" href="../blog.html">← All posts</a>
+
+  <p class="post-eyebrow">// Blog</p>
+  <h1 class="post-title">Robust Z-Score</h1>
+  <div class="post-meta">
+    <span>October 2025</span>
+    <span>8 min read</span>
+  </div>
+  <div class="post-tags">
+    <span class="post-tag">Anomaly Detection</span>
+    <span class="post-tag">Statistics</span>
+    <span class="post-tag">ML</span>
+  </div>
+  <div class="post-divider"></div>
+
+  <div class="prose">
+
+    <p>Z-score is a good old, statistically grounded technique for detecting things that are not "normal."</p>
+
+    <div class="formula">z = (x − mean) / standard deviation</div>
+
+    <p>It uses the mean and standard deviation of the data. In statistical terms, the z-score measures how many standard deviations a point is away from the mean.</p>
+
+    <h2>Why the z-score value matters</h2>
+
+    <ul>
+      <li>Ideally, z should stay close to 0</li>
+      <li>When z ≈ 1, something looks slightly unusual</li>
+      <li>z ≈ 2 is rare, but still possible</li>
+      <li>When z ≥ 3, something needs serious attention</li>
+    </ul>
+
+    <p>Events with a z-score above 3 occur less than 0.3% of the time under a normal distribution.</p>
+
+    <h2>Simple example</h2>
+
+    <p>Consider the following data:</p>
+    <pre><code>[10, 11, 9, 10, 10, 11, 35, 9, 10, 10, 25, 10, 9, 11, 12, 10, 9, 11, 50]</code></pre>
+
+    <p>Most values cluster tightly around 10. The z-score stays close to 0 most of the time — except at the spikes. When the value reaches 35, z moves to around 1. At 25, it becomes more noticeable. When the value reaches 50, z crosses 3. The largest value stands out clearly as something seriously unusual. So far, so good. Z-score works. At least in theory.</p>
+
+    <h2>When things break</h2>
+
+    <p>Now let's make things more extreme. Replace the last value: <strong>50 → 100</strong>.</p>
+
+    <pre><code>[10, 11, 9, 10, 10, 11, 35, 9, 10, 10, 25, 10, 9, 11, 12, 10, 9, 11, 100]</code></pre>
+
+    <p>Intuitively, a value of 100 should look even more anomalous, and smaller spikes (35 and 25) should still stand out. And yes — when the value becomes 100, the z-score jumps to almost 4, clearly indicating a very rare event.</p>
+
+    <p>But here's the problem. Because z-score depends on the mean and standard deviation, introducing a single extreme value:</p>
+    <ul>
+      <li>Increases the mean</li>
+      <li>Inflates the standard deviation</li>
+    </ul>
+
+    <p>As a result, the spike at 35 now has a z-score of ~1, and the spike at 25 drops to ~0.5. They no longer look anomalous. <strong>One large outlier has redefined what "normal" means</strong>, causing smaller — but still important — spikes to be ignored. This is the core weakness of z-score: it is not resistant to outliers.</p>
+
+    <h2>Making Z-Score Robust</h2>
+
+    <p>To fix this, we need a method that does not let extreme values dominate the statistics. The idea is simple:</p>
+    <ul>
+      <li>Replace the mean with the <strong>median</strong></li>
+      <li>Replace standard deviation with <strong>MAD</strong> (Median Absolute Deviation)</li>
+    </ul>
+
+    <div class="formula">z<sub>robust</sub> = (x − median) / (1.4826 × MAD)</div>
+
+    <p>This is known as the modified z-score or robust z-score.</p>
+
+    <h2>Why this works</h2>
+
+    <h3>1. Median instead of mean</h3>
+    <p>The median is stable even when extreme outliers are present. In our examples, the mean shifts from ~14 to ~17 when the spike goes from 50 to 100. But the median stays at 10 in both cases. That alone prevents large spikes from shifting the baseline.</p>
+
+    <h3>2. MAD instead of standard deviation</h3>
+    <p>MAD is defined as:</p>
+    <div class="formula">MAD = median(|x − median|)</div>
+    <p>It measures typical deviation without being influenced by extreme values.</p>
+
+    <h3>3. The 1.4826 constant</h3>
+    <p>This scaling factor makes MAD comparable to standard deviation under a normal distribution, preserving interpretability.</p>
+
+    <h2>The key difference in practice</h2>
+
+    <p>With regular z-score: adding a larger outlier shrinks the importance of existing spikes.</p>
+    <p>With robust z-score: smaller anomalies remain stable, regardless of how extreme the largest outlier becomes. The smaller anomalies are no longer "washed out" by a massive outlier.</p>
+
+    <p>This stability is exactly what we want in many real-world anomaly detection systems.</p>
+
+    <h2>When not to use robust z-score</h2>
+
+    <p>Robust methods are powerful — but not always appropriate.</p>
+
+    <h3>1. When data is truly normal</h3>
+    <p>If your data is well-behaved and normally distributed, both methods produce almost identical results. The extra complexity isn't worth it.</p>
+
+    <h3>2. When strict z-score interpretation matters</h3>
+    <p>Classic interpretations like "z = 3 means this happens less than 0.3% of the time" do not hold cleanly for robust z-scores. Robust z-scores can reach very large values (30, 40, 60), which breaks probabilistic intuition.</p>
+
+    <h3>3. When outliers should redefine normal</h3>
+    <p>Sometimes outliers signal a genuine shift — traffic growth, seasonal demand changes, system upgrades. In such cases, you <em>want</em> the baseline to move. Robust z-score will adapt, but more slowly.</p>
+
+    <h2>Final takeaway</h2>
+
+    <ul>
+      <li><strong>Z-score</strong> is simple, intuitive, and statistically elegant.</li>
+      <li><strong>Robust z-score</strong> trades some interpretability for stability under extreme outliers.</li>
+    </ul>
+
+    <p>Neither is universally better. The right choice depends on what "normal" should mean in your system — and whether you want outliers to redefine it or merely be detected.</p>
+
+  </div>
+
+  <div class="post-nav">
+    <a href="../blog.html">← All posts</a>
+    <a href="stl-mstl-anomaly.html">STL &amp; MSTL →</a>
+  </div>
+</article>
+
+<footer>
+  <span class="footer-copy">© 2026 Vidhi Vazirani</span>
+  <div class="footer-links">
+    <a href="../index.html">Home</a>
+    <a href="../blog.html">Blog</a>
+    <a href="../index.html#contact">Contact</a>
+  </div>
+</footer>
+</body>
+</html>

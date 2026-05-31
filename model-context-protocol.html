@@ -1,0 +1,196 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Model context protocol · Vidhi Vazirani</title>
+  <link rel="stylesheet" href="post.css"/>
+</head>
+<body>
+<nav>
+  <a class="nav-logo" href="../index.html">vv_</a>
+  <ul class="nav-links">
+    <li><a href="../index.html#about">About</a></li>
+    <li><a href="../index.html#experience">Work</a></li>
+    <li><a href="../index.html#publications">Papers</a></li>
+    <li><a href="../blog.html">Blog</a></li>
+    <li><a href="../index.html#contact">Contact</a></li>
+  </ul>
+</nav>
+
+<article>
+  <a class="back-link" href="../blog.html">← All posts</a>
+
+  <p class="post-eyebrow">// Blog</p>
+  <h1 class="post-title">Model context protocol</h1>
+  <div class="post-meta">
+    <span>February 13, 2026</span>
+    <span>10 min read</span>
+  </div>
+  <div class="post-tags">
+    <span class="post-tag">MCP</span>
+    <span class="post-tag">AI Infrastructure</span>
+    <span class="post-tag">LLMs</span>
+  </div>
+  <div class="post-divider"></div>
+
+  <div class="prose">
+
+    <p>Model Context Protocols, or MCPs, are pretty much what the name implies: protocols that help AI models access the context they need to perform tasks.</p>
+
+    <ul>
+      <li>A <strong>model</strong> can be any language or AI model.</li>
+      <li><strong>Context</strong> includes the external information or tools a model depends on to do meaningful work.</li>
+      <li>A <strong>protocol</strong> defines the rules for how this information is shared and accessed.</li>
+    </ul>
+
+    <p>Put simply, MCPs allow AI models to connect with real-world data and tools in a structured and reliable way.</p>
+
+    <h2>The brain analogy</h2>
+
+    <p>Let's understand MCP using an example from our own bodies.</p>
+
+    <p>In humans, the organ that processes information and makes decisions is the brain. It helps us understand what we see, hear, and smell. But can the brain actually see, hear, or smell on its own? No. It depends on sensory organs to gather information from the world.</p>
+
+    <p>Similarly, in AI systems:</p>
+    <ul>
+      <li>The <strong>brain</strong> is like the model — performing reasoning and decision-making.</li>
+      <li>The <strong>sensory organs</strong> (eyes, ears, nose) are like context providers, giving the brain access to external information.</li>
+      <li>The <strong>nervous system</strong> and signaling rules act like the protocol, ensuring information is transmitted correctly between organs and the brain.</li>
+    </ul>
+
+    <p>The brain is smart, but blind without the eyes and deaf without the ears. MCP plays a similar role for AI models — it connects intelligence to the outside world.</p>
+
+    <p>Another analogy: before USB-C, devices required many different cables. USB-C standardized how devices connect. MCP does something similar for AI systems — instead of every application inventing its own way to connect tools and data, MCP provides a standard way for models, tools, and data sources to communicate.</p>
+
+    <h2>MCP Architecture</h2>
+
+    <p>Three roles typically exist:</p>
+    <ul>
+      <li><strong>MCP Host</strong> — AI application that coordinates one or more MCP clients</li>
+      <li><strong>MCP Client</strong> — Component that communicates with MCP servers</li>
+      <li><strong>MCP Server</strong> — Service exposing tools, data, and prompts</li>
+    </ul>
+
+    <p>The server provides context. Clients request it. Hosts orchestrate everything.</p>
+
+    <h2>Core MCP Primitives</h2>
+
+    <p>An MCP server exposes three main primitives:</p>
+
+    <h3>1. Tools</h3>
+    <p>Executable functions an AI system can call. Examples: database queries, file operations, API calls, running calculations. Tools perform <em>actions</em>.</p>
+
+    <h3>2. Resources</h3>
+    <p>Read-only data sources. Examples: file contents, database records, logs, API responses. Resources provide <em>data</em>, not actions.</p>
+
+    <h3>3. Prompts</h3>
+    <p>Reusable instruction templates. They guide how models should use tools and resources. Examples: system prompts, reasoning templates, structured workflows. Prompts help <em>structure interactions</em>.</p>
+
+    <h2>Building a Small MCP Server</h2>
+
+    <p>Let's build a small MCP server as a proof of concept. Our server will help track daily tasks, calendar events, and habits — using simple local files: a Markdown file for tasks, a CSV for habits, and an <code>.ics</code> calendar file for events.</p>
+
+    <h3>Step 1 — Helper Functions</h3>
+    <p>Before defining MCP tools, we create helper functions that isolate logic so multiple tools or prompts can reuse them.</p>
+
+    <pre><code># Tasks parsing — extract unfinished checklist items
+def get_tasks():
+    text = (DATA / "todo.md").read_text()
+    tasks = []
+    for line in text.splitlines():
+        if "- [ ]" in line:
+            tasks.append(line.split("- [ ]")[1].strip())
+    return tasks
+
+# Habit summary — check habits completed today
+def habit_summary():
+    df = pd.read_csv(DATA / "habits.csv")
+    df.columns = [c.strip().lower() for c in df.columns]
+    df["date"] = df["date"].astype(str).str.strip()
+    today_rows = df[df["date"] == today_iso()]
+    summary = {}
+    for _, row in today_rows.iterrows():
+        done = str(row.get("done", 0)).strip().lower() in {"1", "true"}
+        summary[str(row["habit"]).strip()] = done
+    return summary</code></pre>
+
+    <h3>Step 2 — Tools</h3>
+    <p>Now we expose these as MCP tools:</p>
+
+    <pre><code>@mcp.tool()
+def next_tasks(n: int = 3):
+    return get_tasks()[:n]
+
+@mcp.tool()
+def events_today():
+    return get_events_today()
+
+@mcp.tool()
+def daily_brief():
+    return {
+        "tasks": next_tasks(),
+        "events": events_today(),
+        "habits": habit_summary()
+    }</code></pre>
+
+    <h3>Step 3 — Prompts</h3>
+    <p>Prompts guide how an AI system should use available tools:</p>
+
+    <pre><code>@mcp.prompt("write_daily_summary")
+def write_daily_summary(tone: str = 'friendly'):
+    return f"""
+Write a concise daily productivity summary.
+Tone: {tone}
+Steps:
+1. Call events_today()
+2. Call next_tasks(n=3)
+3. Call daily_brief()
+Output: Headline, bullet list of events, tasks, habit status.
+Keep it actionable.
+""".strip()</code></pre>
+
+    <h3>Step 4 — Resources</h3>
+    <p>Resources expose data directly. Unlike tools, they don't perform computation — they provide content:</p>
+
+    <pre><code>@mcp.resource("dashboard://todos")
+def todos_resource():
+    return (DATA / "todo.md").read_text()
+
+@mcp.resource("dashboard://daily_brief")
+def daily_brief_resource():
+    return json.dumps(daily_brief(), indent=2)</code></pre>
+
+    <h2>Testing with MCP Inspector</h2>
+
+    <p>Before connecting our server to more complex clients, we can use <strong>MCP Inspector</strong> — a tool designed specifically for testing MCP servers. It lets you view available tools, prompts, and resources, call tools manually, inspect outputs, and debug server behavior.</p>
+
+    <p>Launch it with:</p>
+    <pre><code>npx @modelcontextprotocol/inspector</code></pre>
+
+    <p>Open the local URL in your browser, set the transport type to <strong>STDIO</strong>, point it at your <code>server.py</code>, and click Connect. Inspector will display all exposed capabilities and let you test them interactively.</p>
+
+    <h2>Wrapping Up</h2>
+
+    <p>With just a few helper functions and decorators, we now have a fully working MCP server exposing tools, resources, and prompts. Even though this example uses simple local files, the same structure applies when connecting to real systems — databases, APIs, enterprise tools, or SaaS platforms.</p>
+
+    <p>The important takeaway: MCP is not about complexity. It is about standardizing how models access capabilities and context. If you can expose tools, resources, and prompts through MCP, you can plug your system into any MCP-compatible client or agent framework. And that is the real power of MCP.</p>
+
+  </div>
+
+  <div class="post-nav">
+    <a href="agentic-ai.html">← Agentic AI</a>
+    <a href="evaluation-loop.html">Evaluation loop →</a>
+  </div>
+</article>
+
+<footer>
+  <span class="footer-copy">© 2026 Vidhi Vazirani</span>
+  <div class="footer-links">
+    <a href="../index.html">Home</a>
+    <a href="../blog.html">Blog</a>
+    <a href="../index.html#contact">Contact</a>
+  </div>
+</footer>
+</body>
+</html>

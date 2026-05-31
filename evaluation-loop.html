@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Evaluation loop for agentic systems · Vidhi Vazirani</title>
+  <link rel="stylesheet" href="post.css"/>
+</head>
+<body>
+<nav>
+  <a class="nav-logo" href="../index.html">vv_</a>
+  <ul class="nav-links">
+    <li><a href="../index.html#about">About</a></li>
+    <li><a href="../index.html#experience">Work</a></li>
+    <li><a href="../index.html#publications">Papers</a></li>
+    <li><a href="../blog.html">Blog</a></li>
+    <li><a href="../index.html#contact">Contact</a></li>
+  </ul>
+</nav>
+
+<article>
+  <a class="back-link" href="../blog.html">← All posts</a>
+
+  <p class="post-eyebrow">// Blog</p>
+  <h1 class="post-title">Evaluation loop for agentic systems</h1>
+  <div class="post-meta">
+    <span>March 21, 2026</span>
+    <span>8 min read</span>
+  </div>
+  <div class="post-tags">
+    <span class="post-tag">Agentic AI</span>
+    <span class="post-tag">Evaluation</span>
+    <span class="post-tag">LLMs</span>
+  </div>
+  <div class="post-divider"></div>
+
+  <div class="prose">
+
+    <p>With the evaluation of agentic workflows, we are now seeing frameworks being built not just for individual tasks, but for entire systems. As these systems move toward increasing autonomy, planning, reasoning, and invoking tools, the need for careful evaluation becomes critical. When we start handing off real tasks to AI systems, evaluation cannot be optional. It needs to be built in with strong guardrails.</p>
+
+    <p>The conversation around evaluation frameworks is not new. It has always existed alongside AI models. We started with accuracy for simple classification tasks, then moved to precision, recall, and F1-scores for more balanced evaluation. Early LLMs relied on metrics like BLEU and ROUGE to evaluate generated text.</p>
+
+    <h2>So what is different now?</h2>
+
+    <p>It is the nature of outputs produced by agentic workflows. Instead of a single response, these systems generate multi-step trajectories involving reasoning, tool calls, and intermediate states. Failures are no longer limited to the final output. They can occur anywhere in the execution trace — including planning, tool selection, or intermediate reasoning.</p>
+
+    <p>This makes evaluation fundamentally harder. We are no longer evaluating just outputs, but entire workflows with multiple interacting components.</p>
+
+    <p>There are a few approaches gaining traction, with two of the most common being <strong>LLM-as-a-judge</strong> and <strong>human evaluation</strong>.</p>
+
+    <p>LLM-as-a-judge involves using a separate LLM, different from the one powering the agent, to evaluate generated responses. Human evaluation relies on subject matter experts to assess correctness and quality. Both approaches have trade-offs. LLMs offer scalability, while humans provide reliability and domain depth. A practical approach is to combine them into a hybrid framework.</p>
+
+    <h2>Building a hybrid evaluation framework</h2>
+
+    <h3>1. Build a dataset</h3>
+    <p>Create a dataset that captures the full range of tasks your agent is expected to handle, including edge cases and multi-step scenarios.</p>
+
+    <h3>2. Set expectations (ground truth)</h3>
+    <p>Work with subject matter experts to define expected outputs, tool usage, and behaviors. These expectations become the foundation for evaluation.</p>
+
+    <h3>3. Bootstrap automation with human signals</h3>
+    <p>Use human-labeled data to guide and calibrate automated evaluation — including LLM judges and rule-based checks — for continuous iterations.</p>
+
+    <h2>Evaluating agentic behavior</h2>
+
+    <p>To properly evaluate an agentic system, we need to assess different components of the workflow and their failure points:</p>
+
+    <ul>
+      <li><strong>Tool selection</strong> — Is the agent choosing the right tool for a given task? Compare expected and actual tool calls.</li>
+      <li><strong>Tool usage</strong> — Is the agent passing correct arguments and correctly interpreting tool outputs?</li>
+      <li><strong>Intermediate reasoning or orchestration</strong> — Are tasks being delegated correctly across agents or steps? LLM-as-a-judge works well here.</li>
+      <li><strong>Final response or action</strong> — Compare the final output against SME-defined expectations. This can be evaluated using LLM-as-a-judge for scoring or qualitative comparison.</li>
+    </ul>
+
+    <h2>Offline vs Online evaluation</h2>
+
+    <p>This approach helps us continuously improve the system, ensuring reliability and preventing quality degradation over time. However, we still need strong guardrails. This is where <strong>offline evaluation</strong> comes in — controlled, dataset-driven evaluations that run before changes are deployed.</p>
+
+    <p>In addition, <strong>online evaluation</strong> helps us understand how the system performs in the real world. By collecting user feedback when responses are unclear, incorrect, or require follow-up, we capture failure modes that may not exist in offline datasets.</p>
+
+    <h2>Closing the loop</h2>
+
+    <p>An effective evaluation loop ties all of this together. Run the agent, collect traces, evaluate across components, identify failures, iterate on prompts, tools, or orchestration, and re-evaluate before deployment.</p>
+
+    <p>As agentic systems become more autonomous, evaluation shifts from being a metric to becoming core infrastructure. Systems without strong evaluation loops will degrade, drift, and fail silently. The future of reliable AI systems will be defined not just by how well they perform, but by how well they are evaluated.</p>
+
+  </div>
+
+  <div class="post-nav">
+    <a href="model-context-protocol.html">← Model context protocol</a>
+    <a href="../blog.html">All posts →</a>
+  </div>
+</article>
+
+<footer>
+  <span class="footer-copy">© 2026 Vidhi Vazirani</span>
+  <div class="footer-links">
+    <a href="../index.html">Home</a>
+    <a href="../blog.html">Blog</a>
+    <a href="../index.html#contact">Contact</a>
+  </div>
+</footer>
+</body>
+</html>

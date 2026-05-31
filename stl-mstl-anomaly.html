@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>STL & MSTL: anomaly detection with seasonality · Vidhi Vazirani</title>
+  <link rel="stylesheet" href="post.css"/>
+</head>
+<body>
+<nav>
+  <a class="nav-logo" href="../index.html">vv_</a>
+  <ul class="nav-links">
+    <li><a href="../index.html#about">About</a></li>
+    <li><a href="../index.html#experience">Work</a></li>
+    <li><a href="../index.html#publications">Papers</a></li>
+    <li><a href="../blog.html">Blog</a></li>
+    <li><a href="../index.html#contact">Contact</a></li>
+  </ul>
+</nav>
+
+<article>
+  <a class="back-link" href="../blog.html">← All posts</a>
+
+  <p class="post-eyebrow">// Blog</p>
+  <h1 class="post-title">STL &amp; MSTL: anomaly detection with seasonality</h1>
+  <div class="post-meta">
+    <span>November 2025</span>
+    <span>12 min read</span>
+  </div>
+  <div class="post-tags">
+    <span class="post-tag">Anomaly Detection</span>
+    <span class="post-tag">Time Series</span>
+    <span class="post-tag">ML</span>
+  </div>
+  <div class="post-divider"></div>
+
+  <div class="prose">
+
+    <p>Time series anomaly detection has some really solid, statistically grounded techniques — like z-score and interquartile ranges (IQR). They're cheap, easy to implement, and often surprisingly effective. But sometimes we need more. Especially when our data has seasonality, trends, or both.</p>
+
+    <h2>The problem with z-score on seasonal data</h2>
+
+    <p>Imagine we're tracking the number of users on an office network. Every morning, employees log in — usage goes up. After work hours, people log off — usage drops. This gives us a very clear daily rise and fall pattern.</p>
+
+    <p>Now apply z-score to this data. There are two failure modes:</p>
+    <ul>
+      <li><strong>Too low threshold (e.g. z = 1)</strong> — way too many false positives, flagging anything above the daily peaks.</li>
+      <li><strong>Too high threshold (e.g. z = 2)</strong> — things look clean until there's a cyber attack during the night. The attack looks "normal" compared to daytime usage, so z-score misses it entirely.</li>
+    </ul>
+
+    <p>Z-score isn't "bad" — it's context-blind. Once your data has structure (like daily patterns), a single global threshold struggles. Too low → everything is an anomaly. Too high → real problems slip through. This is where statistical methods start to break down.</p>
+
+    <h2>Enter STL: Seasonal-Trend decomposition using LOESS</h2>
+
+    <p>STL breaks a time series into three components:</p>
+
+    <div class="formula">X<sub>t</sub> = S<sub>t</sub> + T<sub>t</sub> + R<sub>t</sub></div>
+
+    <p>Where:</p>
+    <ul>
+      <li><strong>X<sub>t</sub></strong> = observed value at time t</li>
+      <li><strong>S<sub>t</sub></strong> = seasonality (daily, weekly, etc.)</li>
+      <li><strong>T<sub>t</sub></strong> = trend (long-term movement)</li>
+      <li><strong>R<sub>t</sub></strong> = residual (what's left)</li>
+    </ul>
+
+    <p>STL uses LOESS (Locally Estimated Scatterplot Smoothing). Instead of fitting one global curve, LOESS fits local regressions around each timestamp using neighboring points. This makes STL local, adaptive, and robust to slow changes in patterns — exactly what we want for real-world time series.</p>
+
+    <h2>The core STL API</h2>
+
+    <pre><code>from statsmodels.tsa.seasonal import STL
+
+stl = STL(
+    series,
+    period=96,   # 15-min data: 1 day = 24 × 4 = 96 points
+    robust=True  # downweight outliers during fitting
+)
+res = stl.fit()</code></pre>
+
+    <p>The key parameters:</p>
+    <ul>
+      <li><code>period</code> — length of the repeating seasonal cycle in number of samples. Get this wrong and the residuals become misleading.</li>
+      <li><code>robust=True</code> — STL iteratively downweights outliers so spikes don't distort the estimated seasonality/trend. Use this when you expect anomalies and don't want them becoming part of "normal."</li>
+    </ul>
+
+    <h2>Using the output</h2>
+
+    <pre><code>df["trend"]    = res.trend     # long-term movement
+df["seasonal"] = res.seasonal  # repeating daily pattern
+df["residual"] = res.resid     # where anomalies live</code></pre>
+
+    <p>Now we combine STL with simple detection logic:</p>
+
+    <pre><code>def stl_detect(df, value_col="value", period=96, k=3, robust=True):
+    df = df.copy()
+    res = STL(df[value_col], period=period, robust=robust).fit()
+    df["residual"] = res.resid
+
+    mu  = df["residual"].mean()
+    sig = df["residual"].std()
+    sig = sig if sig > 1e-12 else 1e-12
+
+    # one-sided: flag positive spikes
+    df["anomaly"] = df["residual"] > (mu + k * sig)
+    return df</code></pre>
+
+    <p>The idea is simple: decompose the series, then apply z-score on the residual. The residual is already cleaned of expected structure — so anomalies actually stand out.</p>
+
+    <h2>Where STL works well — and where it starts to bend</h2>
+
+    <p>STL is a very strong baseline when your data has one dominant seasonal cycle, shows slow smooth trends, and you care about deviations from expected behavior rather than raw values.</p>
+
+    <p>However, STL makes one important assumption: <strong>there is only one seasonal pattern that matters.</strong></p>
+
+    <p>Real office behavior doesn't just repeat every day — it also follows a weekly rhythm. Weekdays are busy. Weekends are quiet. When we force STL to explain this entire structure using a single seasonal period, some weekly behavior leaks into the residual, or genuine anomalies on weekends become harder to distinguish from expected weekend behavior.</p>
+
+    <p>This isn't a failure of STL. It's simply a mismatch between the structure of the data and the assumptions of the model. So the natural question becomes: what if our time series has more than one seasonality?</p>
+
+    <h2>MSTL: stepping it up</h2>
+
+    <p>MSTL (Multiple Seasonal-Trend decomposition) extends STL by allowing multiple seasonal cycles. For our network example:</p>
+    <ul>
+      <li>Daily seasonality: 96 points</li>
+      <li>Weekly seasonality: 96 × 7 = 672 points</li>
+    </ul>
+
+    <pre><code>from statsmodels.tsa.seasonal import MSTL
+
+def mstl_detect(df, value_col="value", periods=(96, 672), k=3):
+    df = df.copy()
+    res = MSTL(df[value_col], periods=list(periods)).fit()
+
+    df["trend"]    = res.trend
+    # MSTL returns multiple seasonal components — sum them
+    df["seasonal"] = res.seasonal.sum(axis=1)
+    df["residual"] = res.resid
+
+    mu    = df["residual"].mean()
+    sigma = df["residual"].std()
+    sigma = sigma if sigma > 1e-12 else 1e-12
+
+    df["anomaly"] = df["residual"] > (mu + k * sigma)
+    return df</code></pre>
+
+    <p>Now the model <em>expects</em> weekends to look different. A sudden spike on a Sunday night becomes genuinely unexpected — so it pops out in the residual and gets flagged cleanly. This is the real value of MSTL: not "more math," but <strong>better expectations</strong>.</p>
+
+    <h2>Final thoughts</h2>
+
+    <p>If there's one takeaway from all of this: <strong>anomaly detection isn't about finding extreme values. It's about finding unexpected behavior.</strong></p>
+
+    <p>STL answers a better question than z-score: "What should this value look like at this moment?" MSTL takes this one step further — acknowledging that most real systems have more than one rhythm.</p>
+
+    <p>The lesson isn't that you always need the fanciest model. It's that the best anomaly detector is the one that understands your data's structure. Start simple. Add structure when needed. And let anomalies live where they belong — in what your model didn't expect.</p>
+
+  </div>
+
+  <div class="post-nav">
+    <a href="robust-z-score.html">← Robust Z-Score</a>
+    <a href="not-so-intelligent.html">Not so intelligent →</a>
+  </div>
+</article>
+
+<footer>
+  <span class="footer-copy">© 2026 Vidhi Vazirani</span>
+  <div class="footer-links">
+    <a href="../index.html">Home</a>
+    <a href="../blog.html">Blog</a>
+    <a href="../index.html#contact">Contact</a>
+  </div>
+</footer>
+</body>
+</html>
