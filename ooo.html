@@ -1,0 +1,689 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <meta name="description" content="Vidhi Vazirani — Out of Office. On a mission to visit all 50 US states."/>
+  <title>OOO · Vidhi Vazirani</title>
+  <link rel="icon" type="image/svg+xml" href="favicon.svg"/>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Mono:wght@300;400;500&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --bg:       #0d0f14;
+      --surface:  #13161e;
+      --border:   #1e2330;
+      --border2:  #2a3048;
+      --accent:   #6ee7b7;
+      --accent2:  #38bdf8;
+      --text:     #e2e8f0;
+      --muted:    #64748b;
+      --serif:    'DM Serif Display', Georgia, serif;
+      --mono:     'DM Mono', monospace;
+      --sans:     'DM Sans', system-ui, sans-serif;
+    }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: var(--sans);
+      font-size: 15px;
+      line-height: 1.7;
+      min-height: 100vh;
+    }
+
+    body::before {
+      content: '';
+      position: fixed; inset: 0;
+      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.04'/%3E%3C/svg%3E");
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    /* ── NAV ── */
+    nav {
+      position: fixed; top: 0; left: 0; right: 0;
+      z-index: 100;
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 0 clamp(1.5rem, 5vw, 4rem);
+      height: 60px;
+      background: rgba(13,15,20,0.85);
+      backdrop-filter: blur(12px);
+      border-bottom: 1px solid var(--border);
+    }
+
+    .nav-logo {
+      font-family: var(--mono);
+      font-size: 13px;
+      color: var(--accent);
+      letter-spacing: 0.05em;
+      text-decoration: none;
+    }
+
+    .nav-links {
+      display: flex; gap: 2rem;
+      list-style: none;
+    }
+
+    .nav-links a {
+      font-family: var(--mono);
+      font-size: 12px;
+      color: var(--muted);
+      text-decoration: none;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      transition: color 0.2s;
+    }
+
+    .nav-links a:hover,
+    .nav-links a.active { color: var(--accent); }
+
+    /* ── LAYOUT ── */
+    main {
+      position: relative; z-index: 1;
+      max-width: 960px;
+      margin: 0 auto;
+      padding: 0 clamp(1.5rem, 5vw, 3rem);
+    }
+
+    section { padding: 7rem 0 3rem; }
+    section:first-child { padding-top: 9rem; }
+
+    .section-label {
+      font-family: var(--mono);
+      font-size: 11px;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: var(--accent);
+      margin-bottom: 0.75rem;
+    }
+
+    h1 {
+      font-family: var(--serif);
+      font-size: clamp(2.6rem, 6vw, 4rem);
+      line-height: 1.1;
+      font-weight: 400;
+      color: var(--text);
+    }
+
+    h2 {
+      font-family: var(--serif);
+      font-size: clamp(1.6rem, 3vw, 2.2rem);
+      font-weight: 400;
+      color: var(--text);
+      margin-bottom: 1.5rem;
+    }
+
+    .divider {
+      width: 40px; height: 1px;
+      background: var(--accent);
+      margin-bottom: 2rem;
+    }
+
+    /* ── HERO ── */
+    #hero {
+      min-height: 65vh;
+      display: flex; flex-direction: column; justify-content: center;
+    }
+
+    .hero-eyebrow {
+      font-family: var(--mono);
+      font-size: 12px;
+      color: var(--accent);
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      margin-bottom: 1.2rem;
+    }
+
+    .hero-sub {
+      font-size: 1.05rem;
+      color: var(--muted);
+      max-width: 560px;
+      margin-top: 1.2rem;
+      line-height: 1.85;
+    }
+
+    .hero-sub em { color: var(--accent2); font-style: normal; }
+
+    /* ── PROGRESS BAR ── */
+    .progress-wrap {
+      margin-top: 3rem;
+      padding-top: 2.5rem;
+      border-top: 1px solid var(--border);
+    }
+
+    .progress-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: baseline;
+      margin-bottom: 0.75rem;
+    }
+
+    .progress-label {
+      font-family: var(--mono);
+      font-size: 11px;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      color: var(--muted);
+    }
+
+    .progress-count {
+      font-family: var(--serif);
+      font-size: 1.8rem;
+      color: var(--accent);
+      line-height: 1;
+    }
+
+    .progress-bar-track {
+      height: 4px;
+      background: var(--border2);
+      border-radius: 2px;
+      overflow: hidden;
+    }
+
+    .progress-bar-fill {
+      height: 100%;
+      width: 40%; /* 20/50 */
+      background: linear-gradient(90deg, var(--accent), var(--accent2));
+      border-radius: 2px;
+      transition: width 1.2s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    .progress-states {
+      margin-top: 0.6rem;
+      font-family: var(--mono);
+      font-size: 11px;
+      color: var(--muted);
+    }
+
+    /* ── MAP SECTION ── */
+    #map-section {
+      padding-top: 4rem;
+    }
+
+    .map-container {
+      position: relative;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      overflow: hidden;
+      margin-top: 1.5rem;
+    }
+
+    #us-map {
+      width: 100%;
+      height: auto;
+      display: block;
+    }
+
+    /* State path defaults */
+    .state {
+      stroke: var(--border2);
+      stroke-width: 0.5px;
+      cursor: pointer;
+      transition: opacity 0.15s;
+    }
+
+    .state.unvisited {
+      fill: #1a1f2e;
+    }
+
+    .state.visited {
+      fill: var(--accent);
+      filter: drop-shadow(0 0 6px rgba(110, 231, 183, 0.4));
+    }
+
+    .state:hover {
+      opacity: 0.75;
+    }
+
+    /* State borders overlay */
+    .state-borders {
+      fill: none;
+      stroke: var(--border);
+      stroke-width: 0.5px;
+      pointer-events: none;
+    }
+
+    /* ── TOOLTIP ── */
+    .map-tooltip {
+      position: absolute;
+      pointer-events: none;
+      background: var(--bg);
+      border: 1px solid var(--border2);
+      border-radius: 4px;
+      padding: 0.5rem 0.8rem;
+      font-family: var(--mono);
+      font-size: 11px;
+      color: var(--text);
+      white-space: nowrap;
+      opacity: 0;
+      transition: opacity 0.15s;
+      z-index: 10;
+    }
+
+    .map-tooltip.visible { opacity: 1; }
+
+    .tooltip-name {
+      font-size: 12px;
+      font-weight: 500;
+      margin-bottom: 0.1rem;
+    }
+
+    .tooltip-status {
+      color: var(--muted);
+    }
+
+    .tooltip-status.done { color: var(--accent); }
+
+    /* ── LEGEND ── */
+    .map-legend {
+      display: flex;
+      gap: 2rem;
+      padding: 1.2rem 1.5rem;
+      border-top: 1px solid var(--border);
+      background: rgba(13,15,20,0.5);
+    }
+
+    .legend-item {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      font-family: var(--mono);
+      font-size: 11px;
+      color: var(--muted);
+      letter-spacing: 0.05em;
+    }
+
+    .legend-dot {
+      width: 10px; height: 10px;
+      border-radius: 2px;
+      flex-shrink: 0;
+    }
+
+    .legend-dot.visited { background: var(--accent); }
+    .legend-dot.unvisited { background: #1a1f2e; border: 1px solid var(--border2); }
+
+    /* ── VISITED LIST ── */
+    #visited-section { padding-top: 4rem; }
+
+    .visited-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+      gap: 1px;
+      background: var(--border);
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      overflow: hidden;
+    }
+
+    .visited-card {
+      background: var(--surface);
+      padding: 1.3rem 1.5rem;
+    }
+
+    .visited-state-name {
+      font-size: 0.95rem;
+      font-weight: 600;
+      color: var(--text);
+      margin-bottom: 0.2rem;
+    }
+
+    .visited-state-note {
+      font-family: var(--mono);
+      font-size: 11px;
+      color: var(--muted);
+      line-height: 1.6;
+    }
+
+    .visited-badge {
+      display: inline-block;
+      font-family: var(--mono);
+      font-size: 9px;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--accent);
+      background: rgba(110,231,183,0.08);
+      border: 1px solid rgba(110,231,183,0.2);
+      padding: 0.1rem 0.4rem;
+      border-radius: 3px;
+      margin-bottom: 0.5rem;
+    }
+
+    /* ── FOOTER ── */
+    footer {
+      position: relative; z-index: 1;
+      border-top: 1px solid var(--border);
+      padding: 2rem clamp(1.5rem, 5vw, 4rem);
+      display: flex; justify-content: space-between; align-items: center;
+      flex-wrap: wrap; gap: 1rem;
+      margin-top: 6rem;
+    }
+
+    .footer-copy {
+      font-family: var(--mono);
+      font-size: 11px;
+      color: var(--muted);
+    }
+
+    .footer-links {
+      display: flex; gap: 1.5rem;
+    }
+
+    .footer-links a {
+      font-family: var(--mono);
+      font-size: 11px;
+      color: var(--muted);
+      text-decoration: none;
+    }
+    .footer-links a:hover { color: var(--accent); }
+
+    .fade-in {
+      opacity: 0;
+      transform: translateY(18px);
+      transition: opacity 0.55s ease, transform 0.55s ease;
+    }
+    .fade-in.visible {
+      opacity: 1;
+      transform: none;
+    }
+
+    @media (max-width: 600px) {
+      .nav-links { gap: 1.2rem; }
+      .map-legend { flex-wrap: wrap; gap: 1rem; }
+    }
+  </style>
+</head>
+<body>
+
+  <nav>
+    <a class="nav-logo" href="index.html">{ vv }</a>
+    <ul class="nav-links">
+      <li><a href="index.html#about">About</a></li>
+      <li><a href="index.html#experience">Work</a></li>
+      <li><a href="index.html#publications">Papers</a></li>
+      <li><a href="blog.html">Blog</a></li>
+      <li><a href="ooo.html" class="active">OOO</a></li>
+    </ul>
+  </nav>
+
+  <main>
+
+    <!-- HERO -->
+    <section id="hero">
+      <p class="hero-eyebrow">// Out of Office</p>
+      <h1>Currently<br><em style="font-style:italic; color:#64748b;">Somewhere New</em></h1>
+      <p class="hero-sub">
+        When I'm not training models or debugging pipelines, I'm chasing new places.
+        I'm on a mission to visit all <em>50 US states</em> — one road trip, flight, or detour at a time.
+      </p>
+
+      <div class="progress-wrap">
+        <div class="progress-header">
+          <span class="progress-label">States Visited</span>
+          <span class="progress-count">20 <span style="font-family:var(--mono);font-size:1rem;color:var(--muted);">/ 50</span></span>
+        </div>
+        <div class="progress-bar-track">
+          <div class="progress-bar-fill" id="progress-fill"></div>
+        </div>
+        <div class="progress-states">Alaska · Arizona · California · Connecticut · DC · Florida · Hawaii · Illinois · Maryland · Massachusetts · Michigan · Nevada · New Jersey · New York · Oregon · Pennsylvania · Rhode Island · Virginia · Washington · Wisconsin</div>
+      </div>
+    </section>
+
+    <!-- MAP -->
+    <section id="map-section" class="fade-in">
+      <p class="section-label">// The Map</p>
+      <div class="divider"></div>
+      <h2>50 States Mission</h2>
+
+      <div class="map-container">
+        <div class="map-tooltip" id="tooltip">
+          <div class="tooltip-name" id="tooltip-name"></div>
+          <div class="tooltip-status" id="tooltip-status"></div>
+        </div>
+        <svg id="us-map" viewBox="0 0 960 600"></svg>
+        <div class="map-legend">
+          <div class="legend-item">
+            <div class="legend-dot visited"></div>
+            <span>Visited (20)</span>
+          </div>
+          <div class="legend-item">
+            <div class="legend-dot unvisited"></div>
+            <span>Not yet (30)</span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- VISITED LIST -->
+    <section id="visited-section" class="fade-in">
+      <p class="section-label">// States Checked Off</p>
+      <div class="divider"></div>
+      <h2>Where I've Been</h2>
+
+      <div class="visited-grid">
+        <div class="visited-card">
+          <div class="visited-badge">Visited</div>
+          <div class="visited-state-name">Alaska</div>
+          <div class="visited-state-note">The last frontier. Glaciers, wilderness, and the midnight sun.</div>
+        </div>
+        <div class="visited-card">
+          <div class="visited-badge">Visited</div>
+          <div class="visited-state-name">Arizona</div>
+          <div class="visited-state-note">Grand Canyon country. Desert sunsets that don't feel real.</div>
+        </div>
+        <div class="visited-card">
+          <div class="visited-badge">Visited</div>
+          <div class="visited-state-name">California</div>
+          <div class="visited-state-note">Home base · SF Bay Area. Where it all started.</div>
+        </div>
+        <div class="visited-card">
+          <div class="visited-badge">Visited</div>
+          <div class="visited-state-name">Connecticut</div>
+          <div class="visited-state-note">New England charm. Fall foliage and quiet coastal towns.</div>
+        </div>
+        <div class="visited-card">
+          <div class="visited-badge">Visited</div>
+          <div class="visited-state-name">DC</div>
+          <div class="visited-state-note">The capital. Museums, monuments, and history at every corner.</div>
+        </div>
+        <div class="visited-card">
+          <div class="visited-badge">Visited</div>
+          <div class="visited-state-name">Florida</div>
+          <div class="visited-state-note">Sun, warmth, and endless coastline. Year-round summer energy.</div>
+        </div>
+        <div class="visited-card">
+          <div class="visited-badge">Visited</div>
+          <div class="visited-state-name">Hawaii</div>
+          <div class="visited-state-note">Paradise found. Volcanoes, ocean, and the most vivid greens.</div>
+        </div>
+        <div class="visited-card">
+          <div class="visited-badge">Visited</div>
+          <div class="visited-state-name">Illinois</div>
+          <div class="visited-state-note">Evanston & Chicago · Northwestern years. Deep dish and deep learning.</div>
+        </div>
+        <div class="visited-card">
+          <div class="visited-badge">Visited</div>
+          <div class="visited-state-name">Maryland</div>
+          <div class="visited-state-note">Chesapeake Bay vibes. Crabcakes and colonial history.</div>
+        </div>
+        <div class="visited-card">
+          <div class="visited-badge">Visited</div>
+          <div class="visited-state-name">Massachusetts</div>
+          <div class="visited-state-note">Boston and beyond. Where academia meets revolution.</div>
+        </div>
+        <div class="visited-card">
+          <div class="visited-badge">Visited</div>
+          <div class="visited-state-name">Michigan</div>
+          <div class="visited-state-note">Great Lakes state. Miles of freshwater shoreline.</div>
+        </div>
+        <div class="visited-card">
+          <div class="visited-badge">Visited</div>
+          <div class="visited-state-name">Nevada</div>
+          <div class="visited-state-note">Las Vegas and the vast desert beyond the strip.</div>
+        </div>
+        <div class="visited-card">
+          <div class="visited-badge">Visited</div>
+          <div class="visited-state-name">New Jersey</div>
+          <div class="visited-state-note">The Garden State. Boardwalks, diners, and NYC's quiet neighbor.</div>
+        </div>
+        <div class="visited-card">
+          <div class="visited-badge">Visited</div>
+          <div class="visited-state-name">New York</div>
+          <div class="visited-state-note">The city that never sleeps. Energy unlike anywhere else.</div>
+        </div>
+        <div class="visited-card">
+          <div class="visited-badge">Visited</div>
+          <div class="visited-state-name">Oregon</div>
+          <div class="visited-state-note">Pacific Northwest magic. Old forests, rugged coast, great coffee.</div>
+        </div>
+        <div class="visited-card">
+          <div class="visited-badge">Visited</div>
+          <div class="visited-state-name">Pennsylvania</div>
+          <div class="visited-state-note">Philly cheesesteaks and Pittsburgh bridges. History runs deep.</div>
+        </div>
+        <div class="visited-card">
+          <div class="visited-badge">Visited</div>
+          <div class="visited-state-name">Rhode Island</div>
+          <div class="visited-state-note">Tiny state, big personality. The Ocean State delivers.</div>
+        </div>
+        <div class="visited-card">
+          <div class="visited-badge">Visited</div>
+          <div class="visited-state-name">Virginia</div>
+          <div class="visited-state-note">Blue Ridge mountains and Civil War history side by side.</div>
+        </div>
+        <div class="visited-card">
+          <div class="visited-badge">Visited</div>
+          <div class="visited-state-name">Washington</div>
+          <div class="visited-state-note">Seattle rain and Cascade peaks. Tech and nature in one place.</div>
+        </div>
+        <div class="visited-card">
+          <div class="visited-badge">Visited</div>
+          <div class="visited-state-name">Wisconsin</div>
+          <div class="visited-state-note">America's Dairyland. Cheese, lakes, and Midwest warmth.</div>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <footer>
+    <span class="footer-copy">© 2026 Vidhi Vazirani</span>
+    <div class="footer-links">
+      <a href="https://www.linkedin.com/in/vidhi-vazirani" target="_blank">LinkedIn</a>
+      <a href="https://github.com/vidhi1203" target="_blank">GitHub</a>
+    </div>
+  </footer>
+
+  <script src="https://cdn.jsdelivr.net/npm/d3@7/dist/d3.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/topojson-client@3/dist/topojson-client.min.js"></script>
+  <script>
+    const visited = new Set([
+      "02", // Alaska
+      "04", // Arizona
+      "06", // California
+      "09", // Connecticut
+      "11", // District of Columbia
+      "12", // Florida
+      "15", // Hawaii
+      "17", // Illinois
+      "24", // Maryland
+      "25", // Massachusetts
+      "26", // Michigan
+      "32", // Nevada
+      "34", // New Jersey
+      "36", // New York
+      "41", // Oregon
+      "42", // Pennsylvania
+      "44", // Rhode Island
+      "51", // Virginia
+      "53", // Washington
+      "55", // Wisconsin
+    ]);
+
+    const stateNames = {
+      "01":"Alabama","02":"Alaska","04":"Arizona","05":"Arkansas",
+      "06":"California","08":"Colorado","09":"Connecticut","10":"Delaware",
+      "11":"District of Columbia","12":"Florida","13":"Georgia","15":"Hawaii",
+      "16":"Idaho","17":"Illinois","18":"Indiana","19":"Iowa",
+      "20":"Kansas","21":"Kentucky","22":"Louisiana","23":"Maine",
+      "24":"Maryland","25":"Massachusetts","26":"Michigan","27":"Minnesota",
+      "28":"Mississippi","29":"Missouri","30":"Montana","31":"Nebraska",
+      "32":"Nevada","33":"New Hampshire","34":"New Jersey","35":"New Mexico",
+      "36":"New York","37":"North Carolina","38":"North Dakota","39":"Ohio",
+      "40":"Oklahoma","41":"Oregon","42":"Pennsylvania","44":"Rhode Island",
+      "45":"South Carolina","46":"South Dakota","47":"Tennessee","48":"Texas",
+      "49":"Utah","50":"Vermont","51":"Virginia","53":"Washington",
+      "54":"West Virginia","55":"Wisconsin","56":"Wyoming"
+    };
+
+    const svg = d3.select("#us-map");
+    const tooltip = document.getElementById("tooltip");
+    const tooltipName = document.getElementById("tooltip-name");
+    const tooltipStatus = document.getElementById("tooltip-status");
+
+    const projection = d3.geoAlbersUsa()
+      .scale(1280)
+      .translate([487, 300]);
+
+    const path = d3.geoPath().projection(projection);
+
+    fetch("https://cdn.jsdelivr.net/npm/us-atlas@3/states-10m.json")
+      .then(r => r.json())
+      .then(us => {
+        const states = topojson.feature(us, us.objects.states);
+
+        svg.selectAll(".state")
+          .data(states.features)
+          .join("path")
+          .attr("class", d => {
+            const id = d.id.toString().padStart(2, "0");
+            return `state ${visited.has(id) ? "visited" : "unvisited"}`;
+          })
+          .attr("d", path)
+          .on("mousemove", function(event, d) {
+            const id = d.id.toString().padStart(2, "0");
+            const name = stateNames[id] || "Unknown";
+            const isVisited = visited.has(id);
+
+            tooltipName.textContent = name;
+            tooltipStatus.textContent = isVisited ? "✓ visited" : "not yet";
+            tooltipStatus.className = `tooltip-status ${isVisited ? "done" : ""}`;
+
+            const rect = document.querySelector(".map-container").getBoundingClientRect();
+            const x = event.clientX - rect.left + 12;
+            const y = event.clientY - rect.top - 10;
+            tooltip.style.left = x + "px";
+            tooltip.style.top = y + "px";
+            tooltip.classList.add("visible");
+          })
+          .on("mouseleave", function() {
+            tooltip.classList.remove("visible");
+          });
+
+        svg.append("path")
+          .datum(topojson.mesh(us, us.objects.states, (a, b) => a !== b))
+          .attr("class", "state-borders")
+          .attr("d", path);
+      });
+
+    // Animate progress bar on load
+    window.addEventListener("load", () => {
+      setTimeout(() => {
+        document.getElementById("progress-fill").style.width = "40%";
+      }, 400);
+    });
+
+    // Scroll fade-in
+    const obs = new IntersectionObserver(entries => {
+      entries.forEach(e => { if (e.isIntersecting) e.target.classList.add("visible"); });
+    }, { threshold: 0.08 });
+    document.querySelectorAll(".fade-in").forEach(el => obs.observe(el));
+  </script>
+</body>
+</html>
