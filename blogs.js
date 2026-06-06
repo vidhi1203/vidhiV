@@ -36,14 +36,14 @@ const BLOGS = [
   },
   {
     title: "Not so intelligent",
-    date: "December 2025",
+    date: "January 17 2026",
     excerpt: "Your favorite AI assistant isn't intelligent — and that's not a bad thing. Understanding how LLMs actually work (pattern prediction, not reasoning) will make you dramatically better at using them.",
     url: "not-so-intelligent.html",
     tags: ["LLMs", "Generative AI", "Explainability"]
   },
   {
     title: "STL & MSTL: anomaly detection with seasonality",
-    date: "November 2025",
+    date: "January 10 2026",
     excerpt: "Z-score is context-blind. Once your data has daily patterns or long-term trends, a single global threshold fails. STL and MSTL decompose time series into trend, seasonality, and residual — letting anomalies live where they belong.",
     url: "stl-mstl-anomaly.html",
     tags: ["Anomaly Detection", "Time Series", "ML"]
