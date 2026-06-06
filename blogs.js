@@ -7,6 +7,13 @@
 
 const BLOGS = [
   {
+    title: "Build Your Personal Website in a Day (No Coding Experience Needed)",
+    date: "June 2026",
+    excerpt: "We are all marketers, and the biggest brand we'll ever pitch is ourselves. Here's exactly how to build a personal website in a day — no coding experience needed, just Claude and a clear sense of who you are.",
+    url: "build-your-personal-website.html",
+    tags: ["Claude", "Tutorial", "GitHub Pages"]
+  },
+  {
     title: "Evaluation loop for agentic systems",
     date: "March 21, 2026",
     excerpt: "Agentic systems produce multi-step trajectories involving reasoning, tool calls, and intermediate states. Failures can occur anywhere in the execution trace. This makes evaluation fundamentally harder — and non-optional.",

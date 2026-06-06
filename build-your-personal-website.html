@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Build Your Personal Website in a Day · Vidhi Vazirani</title>
+  <link rel="stylesheet" href="post.css"/>
+</head>
+<body>
+<nav>
+  <a class="nav-logo" href="index.html">vv_</a>
+  <ul class="nav-links">
+    <li><a href="index.html#about">About</a></li>
+    <li><a href="index.html#experience">Work</a></li>
+    <li><a href="index.html#publications">Papers</a></li>
+    <li><a href="blog.html">Blog</a></li>
+    <li><a href="index.html#contact">Contact</a></li>
+  </ul>
+</nav>
+
+<article>
+  <a class="back-link" href="blog.html">← All posts</a>
+
+  <p class="post-eyebrow">// Blog</p>
+  <h1 class="post-title">Build Your Personal Website in a Day (No Coding Experience Needed)</h1>
+  <div class="post-meta">
+    <span>June 2026</span>
+    <span>4 min read</span>
+  </div>
+  <div class="post-tags">
+    <span class="post-tag">Claude</span>
+    <span class="post-tag">Tutorial</span>
+    <span class="post-tag">GitHub Pages</span>
+  </div>
+  <div class="post-divider"></div>
+
+  <div class="prose">
+
+    <p>We are all marketers, and the biggest brand we will ever pitch is ourselves. With every great brand comes a strong identity — and a personal website does exactly that. It sets the tone before you even walk into a room. Creates an impression before you say a word.</p>
+
+    <p>With access to Claude, this is a side project you can realistically finish in a day. Here's exactly how.</p>
+
+    <h2>Before You Start: Two Things You Need</h2>
+
+    <h3>1. A Master CV</h3>
+
+    <p>This is your bible. Don't worry about formatting or sounding polished — just dump everything. The internship from two summers ago. The side project you worked on for three days. The work you did for your relative's startup. Courses you took during COVID. Certifications, volunteering, research. Include it all. You'll filter later.</p>
+
+    <h3>2. Your Brand</h3>
+
+    <p>Answer two questions before you open Claude:</p>
+
+    <ul>
+      <li><strong>Tagline:</strong> If you had to describe your professional identity in 5 words, what would it say? Get creative. "I eat agentic AI for breakfast." "Designer who actually reads the brief." "Finance brain, startup heart."</li>
+      <li><strong>Colors:</strong> Spend 15 minutes on Pinterest or browse a Figma color guide and pick a palette that feels like you.</li>
+    </ul>
+
+    <p>Got both? Let's build.</p>
+
+    <h2>Step 1: Get a Base Website</h2>
+
+    <p>Open a fresh Claude session. Paste your master CV and use this prompt:</p>
+
+    <blockquote>I want to build a personal website. The goal is to share it within my network so people know me, my work, and who I am outside of work.<br/><br/>
+Color scheme: [your colors here]<br/>
+Tagline: [your tagline here]<br/><br/>
+Build a single-page website I can host on GitHub Pages using HTML, CSS, and JS. Include these sections: Hero/Intro, About, Work Experience, Projects, Contact (with a downloadable resume button).<br/><br/>
+Start with the design and layout first — no real content yet. It should look good: clean fonts, consistent spacing, a design I'd actually be proud to share.</blockquote>
+
+    <p>Iterate on this until you're happy with how it looks. Adjust fonts, spacing, colors. Don't move on until the skeleton feels right.</p>
+
+    <h2>Step 2: Add Your Real Content</h2>
+
+    <p>Once the design is locked, go back to Claude with this:</p>
+
+    <blockquote>Here is my master CV. Populate the website sections with real content from it. Rules:<br/><br/>
+— Don't add anything that isn't in the CV<br/>
+— Use strong action verbs throughout<br/>
+— Keep experience and project descriptions in bullet points<br/>
+— You can refine the language to sound professional, but don't invent anything<br/>
+— The Contact section should include a downloadable resume</blockquote>
+
+    <p>For the downloadable resume, you can either attach a one-page version you already have, or ask Claude to generate one from your master CV.</p>
+
+    <h2>Step 3: Show Your Work</h2>
+
+    <p>This step depends on your field. Pick the one that fits:</p>
+
+    <ul>
+      <li><strong>Marketers:</strong> "Add a page showcasing a campaign I worked on. Here's my brand deck: [attach file]. Walk through the strategy, execution, and results."</li>
+      <li><strong>Photographers/Designers:</strong> "Add a portfolio gallery page with a carousel organized by category — Nature, Travel, Portraits. I'll add the images separately."</li>
+      <li><strong>Engineers &amp; Data folks:</strong> "Add a projects page with cards for my GitHub repos. Each card should show the project name, a one-line description, and link directly to the repo."</li>
+    </ul>
+
+    <p>Keep iterating until this page looks and feels like your actual work.</p>
+
+    <h2>Step 4: Show Who You Are Beyond Work</h2>
+
+    <p>This is what makes a personal website actually personal. Share a few things about your life outside the office and let Claude build a section around them. Examples:</p>
+
+    <ul>
+      <li>An interactive US map highlighting every state you've visited</li>
+      <li>A reading list or book shelf</li>
+      <li>A running log or race history</li>
+      <li>A hobby you're genuinely into — cooking, climbing, crocheting, whatever it is</li>
+    </ul>
+
+    <p>Example prompt:</p>
+
+    <blockquote>Add a "Beyond Work" section. Here's what I want to include:<br/><br/>
+— I'm on a mission to visit all 50 US states — make an interactive map highlighting the ones I've been to: [list your states]<br/>
+— I spend weekends hiking and going on long walks<br/>
+— I'm currently crocheting a colorful blanket<br/><br/>
+Make it feel warm and human, not like a resume section.</blockquote>
+
+    <h2>Step 5: Host It for Free on GitHub Pages</h2>
+
+    <p>Once you're happy with every section, download all your files (you should have at minimum an <code>index.html</code>, a <code>style.css</code>, and possibly a <code>script.js</code>). If you don't have a GitHub account, make one at github.com — it's free and takes two minutes.</p>
+
+    <ol>
+      <li><strong>Create a new repository.</strong> Click the + icon in the top right → New repository. Name it exactly: <code>yourusername.github.io</code> (replace with your actual GitHub username). Set it to Public. Click Create repository.</li>
+      <li><strong>Upload your files.</strong> On the repository page, click Add file → Upload files. Drag in your <code>index.html</code>, <code>style.css</code>, <code>script.js</code>, and any images or assets. Scroll down and click Commit changes.</li>
+      <li><strong>Enable GitHub Pages.</strong> Go to your repository → Settings → scroll to Pages in the left sidebar. Under Source, select Deploy from a branch, choose main, and click Save.</li>
+      <li>Wait 2–3 minutes, then visit <code>https://yourusername.github.io</code>. Your website is live.</li>
+    </ol>
+
+    <p>To update your site later: just upload new versions of your files to the same repository, commit the changes, and GitHub will automatically redeploy. No command line needed.</p>
+
+    <h2>A Few Final Tips</h2>
+
+    <ul>
+      <li><strong>Keep it current.</strong> Set a reminder every 3–6 months to update your experience and projects.</li>
+      <li><strong>Share it.</strong> Add it to your LinkedIn, email signature, and resume. A website no one sees doesn't do much.</li>
+      <li><strong>Iterate slowly.</strong> You don't need to finish every section on day one. Ship what you have, and improve it over time.</li>
+    </ul>
+
+    <div class="callout">
+      <strong>Your website is never truly "done" — and that's the point. It grows with you.</strong>
+    </div>
+
+  </div>
+
+  <div class="post-nav">
+    <a href="evaluation-loop.html">← Evaluation loop for agentic systems</a>
+  </div>
+</article>
+
+<footer>
+  <span class="footer-copy">© 2026 Vidhi Vazirani</span>
+  <div class="footer-links">
+    <a href="index.html">Home</a>
+    <a href="blog.html">Blog</a>
+    <a href="index.html#contact">Contact</a>
+  </div>
+</footer>
+</body>
+</html>
